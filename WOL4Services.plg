@@ -54,7 +54,7 @@ Initial Release
 </CHANGES>
 
  <!-- The 'source' file. -->
- <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.4" Run="upgradepkg --install-new">
+ <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.12" Run="upgradepkg --install-new">
   <URL>&pkgURL;/&plgNAME;.txz</URL>
  </FILE>
 
