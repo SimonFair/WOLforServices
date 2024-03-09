@@ -10,6 +10,8 @@
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
 <!ENTITY plgNAME   "&name;-&version;-x86_64">
 <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+<!ENTITY supportURL	"https://forums.unraid.net/topic/157327-plugin-wol-for-services/">
+<!ENTITY md5		"adea901de110cb183b6d520bd38837f9">
 ]>
 
 <PLUGIN
@@ -19,6 +21,7 @@
     min="6.12.0"
     icon="icon-hardware"
     launch="&launch;"
+    support="&supportURL;"
     pluginURL="&pluginURL;"
 >
 
@@ -72,8 +75,21 @@ fi
 
  <!-- The 'source' file. -->
  <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.12" Run="upgradepkg --install-new">
-  <URL>https://raw.githubusercontent.com/SimonFair/WOLforServices/master/pkg/&plgNAME;.txz</URL>
+  <URL>&pkgURL;/&plgNAME;.txz</URL>
  </FILE>
+
+<!--
+The 'post-updgrade' script.
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+ln -s /usr/local/emhttp/plugins/WOL4Services/include/WOLrun.php /usr/local/emhttp/plugins/dynamix/include/WOLrun.php
+echo "Removing previous versons now upgrade has completed."
+echo
+# Remove old 'bundle' files.
+rm -f $(ls &plgPATH;/*.txz 2>/dev/null | grep -v '&version;')
+</INLINE>
+</FILE>
 
 
   <!-- The 'remove' script. -->
