@@ -51,8 +51,6 @@
 
 Initial Release
 
-</INLINE>
-</FILE>
 
  <!-- The 'source' file. -->
  <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.4" Run="upgradepkg --install-new">
