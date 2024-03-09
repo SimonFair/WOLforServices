@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "WOL4Services">
 <!ENTITY author    "SimonFair">
-<!ENTITY version   "2024.03.09">
+<!ENTITY version   "2024.03.09a">
 <!ENTITY launch    "Settings/WOLsettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/WOLforSerices/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
