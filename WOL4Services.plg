@@ -4,7 +4,7 @@
 <!ENTITY author    "SimonFair">
 <!ENTITY version   "2024.03.09">
 <!ENTITY launch    "Settings/WOLsettings">
-<!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/&name;/master">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/WOLforSerices/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
 <!ENTITY pkgURL    "&gitURL;/pkg">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
