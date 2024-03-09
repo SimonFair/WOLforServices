@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Containers>
-    <Plugin>True</Plugin>
-    <PluginURL>https://raw.githubusercontent.com/SimonFair/WOLforsServices/master/WOL4Services.plg</PluginURL>
+    <Plugin>True</Plugin>sServices/master/WOL4Services.plg</PluginURL>
     <PluginAuthor>SimonFair</PluginAuthor>
     <Beta>False</Beta>
     <Category>Tools:System Drivers:</Category>
