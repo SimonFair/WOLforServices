@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/usr/local/emhttp/plugins/dynamix/scripts/WOL_action load &
+/usr/local/emhttp/plugins/WOL4Services/scripts/WOL_action load &
