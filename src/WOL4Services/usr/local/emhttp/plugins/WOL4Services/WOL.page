@@ -43,7 +43,7 @@ function showWOL(options, init = false) {
   option = options;
   if (init) {
   $('#wolsearch').prop('disabled', true);
-  $.post('/webGui/include/WOL.php',{table:'t1load',option:"all"},function(data){
+  $.post('/plugins/WOL4Services/include/WOL.php',{table:'t1load',option:"all"},function(data){
     clearTimeout(timers.refresh);
     filter = [];
     $("#t1").trigger("destroy");
@@ -84,7 +84,7 @@ function showWOLupdate() {
   $('#wolsearch').prop('disabled', true);
   $('#select').prop('disabled', true);
   $('div.spinner.fixed').show('slow');
-  $.post('/webGui/include/WOL.php',{table:'t1create',option:"all"},function(data){
+  $.post('/plugins/WOL4Services/include/WOL.php',{table:'t1create',option:"all"},function(data){
     $('#rebuild').prop('disabled', false);
     showWOL("all",true);
     $('div.spinner.fixed').hide('slow');
@@ -94,7 +94,7 @@ function showWOLupdate() {
 
 function maccreate(name) {
  
-  $.post('/webGui/include/WOL.php',{table:'macaddress'}, function( data ) {
+  $.post('/plugins/WOL4Services/include/WOL.php',{table:'macaddress'}, function( data ) {
 			if (data.mac) {
 				$('#'+name).val(data.mac);
 			}
