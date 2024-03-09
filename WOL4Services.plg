@@ -75,7 +75,7 @@ fi
 
  <!-- The 'source' file. -->
  <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.12" Run="upgradepkg --install-new">
-  <URL>&pkgURL;/&plgNAME;.txz</URL>
+  <URL>https://raw.githubusercontent.com/SimonFair/WOLforServices/master/pkg/&plgNAME;.txz</URL>
  </FILE>
 
 <!--
