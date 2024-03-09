@@ -19,6 +19,7 @@ Tag="share-alt"
 ?>
 <?
 $members = parse_ini_file('state/network.ini',true);
+$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
 exec("ls --indicator-style=none /sys/class/net|grep -P '^eth[1-9][0-9]*$'",$ports);
 $disabled = _var($var,'fsState')!='Stopped' ? 'disabled' : '';
 $width    = [166,300];
@@ -52,7 +53,7 @@ showStatus('pid','unraidwold');
 </script>
 <form markdown="1" name="WOLsettings" method="POST" action="/update.php" target="progressFrame"  >
 <input type="hidden" name="#file" value="<?=$file;?>">
-<input type="hidden" name="#command" value="/plugin/WOL4Services/scripts/WOL_action">
+<input type="hidden" name="#command" value="<?=$docroot?>/plugin/WOL4Services/scripts/WOL_action">
 <input type="hidden" name="#arg[1]" value="load">
 
 _(Enable WOL for services)_:
