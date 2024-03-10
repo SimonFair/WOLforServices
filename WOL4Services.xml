@@ -3,15 +3,15 @@
     <Plugin>True</Plugin>
     <PluginURL>https://raw.githubusercontent.com/SimonFair/WOLforServices/master/WOL4Services.plg</PluginURL>
     <PluginAuthor>SimonFair</PluginAuthor>
-    <Beta>False</Beta>
+    <Beta>True</Beta>
     <Category>Tools:System Drivers:</Category>
-    <Date>2024-03-04</Date>
+    <Date>2024-03-10</Date>
     <Name>Wol for Services</Name>
     <Description>
         This plugin allows you to perform actions with Wakeonlan packets.
     </Description>
-    <MinVer>6.13.0</MinVer>
+    <MinVer>6.12.0</MinVer>
     <Project>https://raw.githubusercontent.com/SimonFair/WOLforServices/master</Project>
-    <Support></Support>
+    <Support>https://forums.unraid.net/topic/157327-plugin-wol-for-services/</Support>
     <License>MIT License - Copyright 2024 - 2024 SimonFair</License>
 </Containers>
