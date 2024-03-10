@@ -4,7 +4,7 @@
 <!ENTITY author    "SimonFair">
 <!ENTITY version   "2024.03.09a">
 <!ENTITY launch    "Settings/WOLsettings">
-<!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/WOLforSerices/master">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/WOLforServices/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
 <!ENTITY pkgURL    "&gitURL;/pkg">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
@@ -23,6 +23,7 @@
     launch="&launch;"
     support="&supportURL;"
     pluginURL="&pluginURL;"
+    description="Support for performing actions(Start,Stop,Resume) on VMs, Docker and LXC via WOL magic packets."
 >
 
 <!--
@@ -75,7 +76,7 @@ fi
 
  <!-- The 'source' file. -->
  <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.12" Run="upgradepkg --install-new">
-  <URL>https://raw.githubusercontent.com/SimonFair/WOLforServices/master/pkg/&plgNAME;.txz</URL>
+  <URL>&pkgURL;/&plgNAME;.txz</URL>
  </FILE>
 
 <!--
