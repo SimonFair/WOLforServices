@@ -3,7 +3,7 @@
 <!ENTITY name      "WOL4Services">
 <!ENTITY author    "SimonFair">
 <!ENTITY version   "2024.03.10">
-<!ENTITY launch    "Settings/WOLsettings">
+<!ENTITY launch    "Settings/WOLSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/WOLforServices/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
 <!ENTITY pkgURL    "&gitURL;/pkg">
