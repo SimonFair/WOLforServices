@@ -29,6 +29,8 @@ if (!isset($RUNLXC)) $RUNLXC = "y";
 if (!isset($RUNVM)) $RUNVM = "y";
 if (!isset($RUNDocker)) $RUNDocker = "y";
 if (!isset($RUNSHUT)) $RUNSHUT = "n";
+if (!isset($RUNSUSPMODE)) $RUNSUSPMODE = "disk";
+if (!isset($RUNSUSPCMD)) $RUNSUSPCMD = "suspend";
 
 $arrEntries = [] ;
 if ($libvirtd_running && $RUNVM == "y") {
@@ -130,11 +132,16 @@ if ($found && $mac_list[$mac]['enable'] != "disable") {
             switch ($state) {
               case 'running':
                 if ($RUNSHUT == "y" && $mac_list[$mac]['enable'] == "shutdown") $lv->domain_shutdown("{$mac_list[$mac]['name']}");
-                if ($RUNSHUT == "y" && $mac_list[$mac]['enable'] == "suspend") $lv->domain_suspend("{$mac_list[$mac]['name']}");
+                if ($RUNSHUT == "y" && $mac_list[$mac]['enable'] == "suspend") { 
+                  if ($RUNSUSPCMD == "dompmsuspend") echo " Suspend $RUNSUSPMODE ".shell_exec("virsh dompmsuspend {$mac_list[$mac]['name']} $RUNSUSPMODE ");
+                  if ($RUNSUSPCMD == "suspend") $lv->domain_suspend("{$mac_list[$mac]['name']}");
+                }
                 break;
               case 'paused':
-              case 'pmsuspended':
                 $lv->domain_resume("{$mac_list[$mac]['name']}");
+                break;
+              case 'pmsuspended':
+                shell_exec("virsh dompmkaeup {$mac_list[$mac]['name']}");
                 break;
               default:
                 $lv->domain_start("{$mac_list[$mac]['name']}");

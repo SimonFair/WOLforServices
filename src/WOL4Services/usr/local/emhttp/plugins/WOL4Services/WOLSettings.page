@@ -31,6 +31,8 @@ if ($current == false) $current =[
   "RUNLXC" => "y",
   "RUNVM" => "y",
   "RUNSHUT" => "n",
+  "RUNSUSPMODE" => "disk",
+  "RUNSUSPCMD" => "suspend",
   "INTERFACE" => "eth0",
   "IFMODE" => "n",
   "LOGFILE" => "syslog"
@@ -96,6 +98,22 @@ _(Enable Shutdown / Suspend actions)_:
   </select>
 
 :WOL_run_shutdown_help:
+
+_(Suspend command)_:
+: <select name="RUNSUSPCMD" >
+  <?=mk_option($current['RUNSUSPCMD'], "suspend", _('Suspend'))?>
+  <?=mk_option($current['RUNSUSPCMD'], "dompmsuspend", _('Power Management Suspend'))?>
+  </select>
+
+:WOL_run_suspcmd_help:
+
+_(Suspend PM mode)_:
+: <select name="RUNSUSPMODE" >
+  <?=mk_option($current['RUNSUSPMODE'], "disk", _('Disk'))?>
+  <?=mk_option($current['RUNSUSPMODE'], "mem", _('Memory'))?>
+  </select>
+
+:WOL_run_suspmode_help:
 
 _(Interface to listen on)_:
 : <select id="INTERFACE" name="INTERFACE" >
