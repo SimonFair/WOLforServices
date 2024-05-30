@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "WOL4Services">
 <!ENTITY author    "SimonFair">
-<!ENTITY version   "2024.04.16">
+<!ENTITY version   "2024.05.30">
 <!ENTITY launch    "Settings/WOLSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/WOLforServices/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -51,6 +51,10 @@
 -->
 
 <CHANGES>
+###2024-05-30
+
+Fix - Display and saving issues.
+
 ###2024-04-16
 
 Add Additional options for suspend. Suspend will just pause a VM, Power Mode Suspend will change power state of VM. Addtional option for Power Mode are memory and disk.
