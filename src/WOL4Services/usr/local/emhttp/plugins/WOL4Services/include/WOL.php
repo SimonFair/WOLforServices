@@ -70,9 +70,9 @@ foreach($arrEntries as $key => $data) {
   foreach($data as $data2){
     $name=$data2['name'];
     if (isset($user_mac[$type][$name])) {
-      $name=$name;
       $arrEntries[$type][$name]['enable'] = $user_mac[$type][$name]['enable'];
-      $arrEntries[$type][$name]['user_mac'] = strtolower($user_mac[$type][$name]['user_mac']);
+      $arrEntries[$type][$name]['user_mac'] = $user_mac[$type][$name]['user_mac'];
+      if ($arrEntries[$type][$name]['user_mac'] != "None Defined") $arrEntries[$type][$name]['user_mac'] = strtolower($arrEntries[$type][$name]['user_mac']);
     } else {
       $arrEntries[$type][$name]['enable'] = 'enable';
       $arrEntries[$type][$name]['user_mac'] = 'None Defined';
@@ -98,10 +98,9 @@ case 't1load':
     $macs .= " {$intdetail['mac']}" ;
    }
     $html .= "<td>$systype</td>";
-    $selecttypename="enable;".$systype.";".$macaddr['name'];
-    $mactypename=htmlspecialchars("user_mac;".$systype.";".$macaddr['name']);
-    $mactypeid=htmlspecialchars("user_mac".$systype."".$macaddr['name']);
-    $user_mac_str = '<input type="text" name="'.$mactypename.'" id="'.$mactypeid.'" class="narrow" value="'.htmlspecialchars($macaddr['user_mac']).'" title="'._("random mac, you can supply your own").'" /><a><i  onclick="maccreate(\''.$mactypeid.'\')" class="fa fa-refresh mac_generate" title="re-generate random mac address"></i></a>';
+    $selecttypename="enable;".$systype.";".rawurlencode($macaddr['name']);
+    $mactypename="user_mac;".$systype.";".rawurlencode($macaddr['name']);
+    $user_mac_str = '<input type="text" name="'.$mactypename.'"  class="narrow" value="'.htmlspecialchars($macaddr['user_mac']).'" title="'._("random mac, you can supply your own").'" /><a><i  onclick="maccreate(\''.htmlspecialchars($mactypename).'\')" class="fa fa-refresh mac_generate" title="re-generate random mac address"></i></a>';
     $html .= "<td>{$macaddr['name']}</td><td id=\"status$systype\">$macs</td><td>";
     $html .="<select name='$selecttypename' class='audio narrow'>";
     $html .= mk_option($macaddr["enable"]  , "disable", _("Disabled"));

@@ -21,13 +21,13 @@ if (count($_POST)) {
     foreach($_POST as $postkey=>$data) {
       if ($postkey=="#apply") continue;
       $keys = explode(";",$postkey);
-      if (count($keys) >1) $update_file[$keys[1]][$keys[2]][$keys[0]]=$data;        
+      if (count($keys) >1) $update_file[$keys[1]][rawurldecode($keys[2])][$keys[0]]=$data;      
     }
 
     foreach($update_file as $type => $types) {
       foreach($types as $name => $details) {
-        if ($details['user_mac'] == "") $details['user_mac'] = "None Defined";
-        if ($details['user_mac'] == "None Defined" && ($details['enable'] == "enable" || $details['enable'] == "shutdown" || $details['enable'] == "suspend")) unset($update_file[$type][$name]) ;
+        if ($details['user_mac'] == "") $update_file[$type][$name]['user_mac'] = "None Defined";
+        if ($update_file[$type][$name]['user_mac'] == "None Defined" && $details['enable'] == "enable" ) unset($update_file[$type][$name]) ;
       }
     }
   }
@@ -35,7 +35,57 @@ if (count($_POST)) {
   file_put_contents("/boot/config/wol.json",json_encode($update_file));
   echo '<meta http-equiv="refresh" content="0">';
 }
+
+ global $var ;
+$theme = $display['theme'] ;
 ?>
+
+<style>
+table.t1{margin-top:0; border-collapse: collapse; border-spacing: 0;}
+table tr td{padding:0 0 3px 0;margin:0}
+table tr td.thin{line-height:8px;height:8px}
+table.t1 tr>td{width: 1%; ; text-align:centre ;white-space: nowrap;}
+table.t1 tr>td+td{width: 1%; white-space: nowrap; }
+table.t1 tr>td+td+td{width:auto ; text-align:left;}
+table.t1 tr>td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td+td+td+td+td+td{text-align:left;}
+.tablesorter .filtered {
+    display: none;
+}
+<?if ($theme == "black"):?>
+table.tablesorter tbody tr.alt-row {background-color:#212121;}
+table.tablesorter tbody tr.normal-row {background-color:#1c1b1b;}
+input.search {color:#f2f2f2;background-color:#1c1b1b;}
+<?endif;?>
+<?if ($theme == "white"):?>
+table.tablesorter tbody tr.alt-row {background-color:#ededed;}
+table.tablesorter tbody tr.normal-row {background-color:#f2f2f2;}
+input.search  {color:#1c1b1b;background-color:#f2f2f2;}
+<?endif;?>
+<?if ($theme == "gray"):?>
+table.tablesorter tbody tr.alt-row {solid #0c0f0b;}
+table.tablesorter tbody tr.normal-row {background-color:#1b1d1b;}
+input.search {color:#606e7f;background-color:#1b1d1b;}
+table.tablesorter thead th {color:#606e7f;background-color:#1b1d1b;}
+div.tablesorter-header-inner {color:#606e7f;background-color:#1b1d1b;}
+<?endif;?>
+<?if ($theme == "azure"):?>
+table.tablesorter tbody tr.alt-row {background-color:#e4e2e4; }
+table.tablesorter tbody tr.normal-row {solid #f3f0f4;}
+input.search {color:#606e7f;background-color:#e4e2e4;}
+table.tablesorter thead th {color:#606e7f;background-color:#e4e2e4;}
+div.tablesorter-header-inner {color:#606e7f;background-color:#e4e2e4;}
+<?endif;?>
+</style>
 <script src="/webGui/javascript/jquery.tablesorter.widgets.js"></script>
 
 <script>
@@ -96,7 +146,8 @@ function maccreate(name) {
  
   $.post('/plugins/WOL4Services/include/WOL.php',{table:'macaddress'}, function( data ) {
 			if (data.mac) {
-				$('#'+name).val(data.mac);
+        var namedecode = document.getElementsByName(name);
+        namedecode[0].value = data.mac;
 			}
 		},'json');
 }
@@ -106,7 +157,7 @@ showWOL("all",true);
 
 :WOL_intro_help:
 
-<form autocomplete="off" onsubmit="return false;"><span><input class="t1 search" id="wolsearch" type="search" placeholder="Search..." onchange="filterWOL();"></span></form>
+<form autocomplete="off" onsubmit="return false;"><span><input class="search" id="wolsearch" type="search" placeholder="Search..." onchange="filterWOL();"></span></form>
 <pre><form name="WOL" id="WOL" method="POST" class="js-confirm-leave"  >
 <table name="t1"id='t1' class="t1 unraid  tablesorter" >
 <tr><td><div class="spinner"></div></td></tr></table></pre><br>
