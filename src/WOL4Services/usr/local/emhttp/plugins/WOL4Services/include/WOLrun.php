@@ -141,7 +141,7 @@ if ($found && $mac_list[$mac]['enable'] != "disable") {
                 $lv->domain_resume("{$mac_list[$mac]['name']}");
                 break;
               case 'pmsuspended':
-                shell_exec("virsh dompmkaeup {$mac_list[$mac]['name']}");
+                shell_exec("virsh dompmkaeup \"{$mac_list[$mac]['name']}\"");
                 break;
               default:
                 $lv->domain_start("{$mac_list[$mac]['name']}");
