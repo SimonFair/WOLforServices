@@ -133,7 +133,7 @@ if ($found && $mac_list[$mac]['enable'] != "disable") {
               case 'running':
                 if ($RUNSHUT == "y" && $mac_list[$mac]['enable'] == "shutdown") $lv->domain_shutdown("{$mac_list[$mac]['name']}");
                 if ($RUNSHUT == "y" && $mac_list[$mac]['enable'] == "suspend") { 
-                  if ($RUNSUSPCMD == "dompmsuspend") echo " Suspend $RUNSUSPMODE ".shell_exec("virsh dompmsuspend {$mac_list[$mac]['name']} $RUNSUSPMODE ");
+                  if ($RUNSUSPCMD == "dompmsuspend") echo " Suspend $RUNSUSPMODE ".shell_exec("virsh dompmsuspend \"{$mac_list[$mac]['name']}\" $RUNSUSPMODE ");
                   if ($RUNSUSPCMD == "suspend") $lv->domain_suspend("{$mac_list[$mac]['name']}");
                 }
                 break;
