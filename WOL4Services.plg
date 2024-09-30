@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "WOL4Services">
 <!ENTITY author    "SimonFair">
-<!ENTITY version   "2024.05.31b">
+<!ENTITY version   "2024.09.30">
 <!ENTITY launch    "Settings/WOLSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/WOLforServices/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -51,6 +51,10 @@
 -->
 
 <CHANGES>
+###2024-09-30
+
+Add - Restart option.
+
 ###2024-05-31b
 
 Fix - suspend and wakeup issues
