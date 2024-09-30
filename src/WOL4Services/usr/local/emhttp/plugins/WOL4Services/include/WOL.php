@@ -107,6 +107,7 @@ case 't1load':
     $html .= mk_option($macaddr["enable"]  , "enable", _("Enabled"));
     $html .= mk_option($macaddr["enable"]  , "shutdown", _("Enabled and Shutdown"));
     $html .= mk_option($macaddr["enable"]  , "suspend", _("Enabled and Suspend"));
+    $html .= mk_option($macaddr["enable"]  , "restart", _("Enabled and reboot/restart"));
     $html .= "</select></td><td>".$user_mac_str."</td></tr>";
     $text = "";
   }
