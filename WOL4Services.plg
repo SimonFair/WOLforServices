@@ -1,0 +1,124 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "WOL4Services">
+<!ENTITY author    "SimonFair">
+<!ENTITY version   "2024.09.30">
+<!ENTITY launch    "Settings/WOLSettings">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/WOLforServices/master">
+<!ENTITY pluginURL "&gitURL;/&name;.plg">
+<!ENTITY pkgURL    "&gitURL;/pkg">
+<!ENTITY plgPATH   "/boot/config/plugins/&name;">
+<!ENTITY plgNAME   "&name;-&version;-x86_64">
+<!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+<!ENTITY supportURL	"https://forums.unraid.net/topic/157327-plugin-wol-for-services/">
+<!ENTITY md5		"adea901de110cb183b6d520bd38837f9">
+]>
+
+<PLUGIN
+    name="&name;"
+    author="&author;"
+    version="&version;"
+    min="6.12.0"
+    icon="icon-hardware"
+    launch="&launch;"
+    support="&supportURL;"
+    pluginURL="&pluginURL;"
+    description="Support for performing actions(Start,Stop,Resume) on VMs, Docker and LXC via WOL magic packets."
+>
+
+<!--
+  MIT License
+
+  Copyright (c) 2024-2024 SimonFair
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+-->
+
+<CHANGES>
+###2024-09-30
+
+Add - Restart option.
+
+###2024-05-31b
+
+Fix - suspend and wakeup issues
+
+###2024-05-30
+
+Fix - Display and saving issues.
+
+###2024-04-16
+
+Add Additional options for suspend. Suspend will just pause a VM, Power Mode Suspend will change power state of VM. Addtional option for Power Mode are memory and disk.
+mem - equivalent of S3 ACPI state
+disk - equivalent of S4 ACPI state
+
+###2024-03-10
+
+Initial Release
+
+</CHANGES>
+
+<!--
+The 'pre-install' script.
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+# Check to see if new install.
+
+
+if [ ! -d "/boot/config/plugins/&name;" ]
+then
+ mkdir "/boot/config/plugins/&name;"
+fi
+
+
+</INLINE>
+</FILE>
+
+ <!-- The 'source' file. -->
+ <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.12" Run="upgradepkg --install-new">
+  <URL>&pkgURL;/&plgNAME;.txz</URL>
+ </FILE>
+
+<!--
+The 'post-updgrade' script.
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+ln -s /usr/local/emhttp/plugins/WOL4Services/include/WOLrun.php /usr/local/emhttp/plugins/dynamix/include/WOLrun.php
+echo "Removing previous versons now upgrade has completed."
+echo
+# Remove old 'bundle' files.
+rm -f $(ls &plgPATH;/*.txz 2>/dev/null | grep -v '&version;')
+</INLINE>
+</FILE>
+
+
+  <!-- The 'remove' script. -->
+  <FILE Run="/bin/bash" Method="remove">
+   <INLINE>
+    echo "Removing &name;..."
+    removepkg &plgPATH;/*.txz
+    rm -rf &plgPATH;
+    rm -rf &emhttp;
+    echo "&name; has been removed"
+   </INLINE>
+  </FILE>
+</PLUGIN>

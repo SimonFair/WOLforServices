@@ -1,0 +1,167 @@
+Menu="UNRAID-OS"
+Title="WOL for Services"
+Icon="fa-bell"
+Tag="server"
+---
+<?PHP
+/* Copyright 2005-2023, Lime Technology
+ * Copyright 2012-2023, Bergware International.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
+if (count($_POST)) {
+  $cfg = NULL ;
+  if ($_POST['#apply'] == "_(Save)_") {
+    foreach($_POST as $postkey=>$data) {
+      if ($postkey=="#apply") continue;
+      $keys = explode(";",$postkey);
+      if (count($keys) >1) $update_file[$keys[1]][rawurldecode($keys[2])][$keys[0]]=$data;      
+    }
+
+    foreach($update_file as $type => $types) {
+      foreach($types as $name => $details) {
+        if ($details['user_mac'] == "") $update_file[$type][$name]['user_mac'] = "None Defined";
+        if ($update_file[$type][$name]['user_mac'] == "None Defined" && $details['enable'] == "enable" ) unset($update_file[$type][$name]) ;
+      }
+    }
+  }
+  unset($_POST) ;
+  file_put_contents("/boot/config/wol.json",json_encode($update_file));
+  echo '<meta http-equiv="refresh" content="0">';
+}
+
+ global $var ;
+$theme = $display['theme'] ;
+?>
+
+<style>
+table.t1{margin-top:0; border-collapse: collapse; border-spacing: 0;}
+table tr td{padding:0 0 3px 0;margin:0}
+table tr td.thin{line-height:8px;height:8px}
+table.t1 tr>td{width: 1%; ; text-align:centre ;white-space: nowrap;}
+table.t1 tr>td+td{width: 1%; white-space: nowrap; }
+table.t1 tr>td+td+td{width:auto ; text-align:left;}
+table.t1 tr>td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td+td+td+td+td{text-align:left;}
+table.t1 tr>td+td+td+td+td+td+td+td+td+td+td+td+td{text-align:left;}
+.tablesorter .filtered {
+    display: none;
+}
+<?if ($theme == "black"):?>
+table.tablesorter tbody tr.alt-row {background-color:#212121;}
+table.tablesorter tbody tr.normal-row {background-color:#1c1b1b;}
+input.search {color:#f2f2f2;background-color:#1c1b1b;}
+<?endif;?>
+<?if ($theme == "white"):?>
+table.tablesorter tbody tr.alt-row {background-color:#ededed;}
+table.tablesorter tbody tr.normal-row {background-color:#f2f2f2;}
+input.search  {color:#1c1b1b;background-color:#f2f2f2;}
+<?endif;?>
+<?if ($theme == "gray"):?>
+table.tablesorter tbody tr.alt-row {solid #0c0f0b;}
+table.tablesorter tbody tr.normal-row {background-color:#1b1d1b;}
+input.search {color:#606e7f;background-color:#1b1d1b;}
+table.tablesorter thead th {color:#606e7f;background-color:#1b1d1b;}
+div.tablesorter-header-inner {color:#606e7f;background-color:#1b1d1b;}
+<?endif;?>
+<?if ($theme == "azure"):?>
+table.tablesorter tbody tr.alt-row {background-color:#e4e2e4; }
+table.tablesorter tbody tr.normal-row {solid #f3f0f4;}
+input.search {color:#606e7f;background-color:#e4e2e4;}
+table.tablesorter thead th {color:#606e7f;background-color:#e4e2e4;}
+div.tablesorter-header-inner {color:#606e7f;background-color:#e4e2e4;}
+<?endif;?>
+</style>
+<script src="/webGui/javascript/jquery.tablesorter.widgets.js"></script>
+
+<script>
+function showWOL(options, init = false) {
+  option = options;
+  if (init) {
+  $('#wolsearch').prop('disabled', true);
+  $.post('/plugins/WOL4Services/include/WOL.php',{table:'t1load',option:"all"},function(data){
+    clearTimeout(timers.refresh);
+    filter = [];
+    $("#t1").trigger("destroy");
+    $('#t1').html(data.html);
+    $('#t1').tablesorter({
+      sortList: [[0,0]],
+      sortAppend: [[0,0]],
+      widgets: ['stickyHeaders','filter','zebra'],
+      widgetOptions: {
+        // on black and white, offset is height of #menu
+        // on azure and gray, offset is height of #header
+        stickyHeaders_offset: ($('#menu').height() < 50) ? $('#menu').height() : $('#header').height(),
+        filter_columnFilters: false,
+        zebra: ["normal-row","alt-row"]
+      }
+    });
+    $('div.spinner.fixed').hide('slow');
+    $('#wolsearch').prop('disabled', false);
+    $('#select').prop('disabled', false);
+    $('#rebuild').prop('disabled', data.init);
+  },"json");
+  } else {
+    filter = [];
+    filterWOL();
+  }
+}
+
+function filterWOL() {
+  var totalColumns = $('#t1')[0].config.columns;
+  var filter = [];
+  filter[totalColumns] = $('#wolsearch').val(); // this searches all columns
+  $('#t1').trigger('search', [filter]);
+}
+
+function showWOLupdate() {
+  $('#rebuild').prop('disabled', true);
+  $('#t1').html("");
+  $('#wolsearch').prop('disabled', true);
+  $('#select').prop('disabled', true);
+  $('div.spinner.fixed').show('slow');
+  $.post('/plugins/WOL4Services/include/WOL.php',{table:'t1create',option:"all"},function(data){
+    $('#rebuild').prop('disabled', false);
+    showWOL("all",true);
+    $('div.spinner.fixed').hide('slow');
+  });
+}
+
+
+function maccreate(name) {
+ 
+  $.post('/plugins/WOL4Services/include/WOL.php',{table:'macaddress'}, function( data ) {
+			if (data.mac) {
+        var namedecode = document.getElementsByName(name);
+        namedecode[0].value = data.mac;
+			}
+		},'json');
+}
+
+showWOL("all",true);
+</script>
+
+:WOL_intro_help:
+
+<form autocomplete="off" onsubmit="return false;"><span><input class="search" id="wolsearch" type="search" placeholder="Search..." onchange="filterWOL();"></span></form>
+<pre><form name="WOL" id="WOL" method="POST" class="js-confirm-leave"  >
+<table name="t1"id='t1' class="t1 unraid  tablesorter" >
+<tr><td><div class="spinner"></div></td></tr></table></pre><br>
+<input type="button" value="_(Done)_" onclick="done()">
+<input type="submit" name="#apply" id='#apply' value="_(Save)_" >
+</form>
+

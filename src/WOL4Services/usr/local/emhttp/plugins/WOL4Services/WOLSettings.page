@@ -1,0 +1,153 @@
+Menu="OtherSettings"
+Type="xmenu"
+Title="WOL for Services Settings"
+Icon="fa-bell"
+Tag="share-alt"
+---
+<?PHP
+/* Copyright 2005-2024, Lime Technology
+ * Copyright 2012-2024, Bergware International.
+ * Copyright 2023-2024, Simon Fairweather.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+?>
+<?
+$members = parse_ini_file('state/network.ini',true);
+$docroot = $docroot ?? $_SERVER['DOCUMENT_ROOT'] ?: '/usr/local/emhttp';
+exec("ls --indicator-style=none /sys/class/net | grep -v '^lo$'", $ports);
+$disabled = _var($var,'fsState')!='Stopped' ? 'disabled' : '';
+$width    = [166,300];
+$file    = '/boot/config/wol.cfg';
+$current = @parse_ini_file($file);
+if ($current == false) $current =[
+  "WOLENABLED" => "no",
+  "RUNDOCKER" => "y",
+  "RUNLXC" => "y",
+  "RUNVM" => "y",
+  "RUNSHUT" => "n",
+  "RUNSUSPMODE" => "disk",
+  "RUNSUSPCMD" => "suspend",
+  "INTERFACE" => "eth0",
+  "IFMODE" => "n",
+  "LOGFILE" => "syslog"
+];
+if (!isset($current['LOGFILE'])) $current['LOGFILE'] = "syslog";
+
+function locked($source,$port) {
+  global $members;
+  foreach ($members as $member => $value) {
+    if ($member == $source) continue;
+    if ($value['BONDING']=='yes' && in_array($port,explode(',',$value['BONDNICS']))) return $value['BONDNAME'].' '.$member;
+    if ($value['BRIDGING']=='yes' && in_array($port,explode(',',$value['BRNICS']))) return $value['BRNAME'].' '.$member;
+  }
+  return false;
+}
+
+?>
+<script>
+showStatus('pid','unraidwold');
+</script>
+<form markdown="1" name="WOLsettings" method="POST" action="/update.php" target="progressFrame"  >
+<input type="hidden" name="#file" value="<?=$file;?>">
+<input type="hidden" name="#command" value="<?=$docroot?>/plugins/WOL4Services/scripts/WOL_action">
+<input type="hidden" name="#arg[1]" value="load">
+
+_(Enable WOL for services)_:
+: <select name="WOLENABLED" >
+  <?=mk_option($current['WOLENABLED'], "no", _('No'))?>
+  <?=mk_option($current['WOLENABLED'], "yes", _('Yes'))?>
+  </select>
+
+:WOL_enable_help:
+
+_(Enable Docker actions)_:
+
+: <select name="RUNDOCKER" >
+  <?=mk_option($current['RUNDOCKER'], "y", _('Yes'))?>
+  <?=mk_option($current['RUNDOCKER'], "n", _('No'))?>
+  </select>
+
+:WOL_run_docker_help:
+
+_(Enable LXC actions)_:
+: <select name="RUNLXC" >
+  <?=mk_option($current['RUNLXC'], "y", _('Yes'))?>
+  <?=mk_option($current['RUNLXC'], "n", _('No'))?>
+  </select>
+
+:WOL_run_LXC_help:
+
+_(Enable VM actions)_:
+: <select name="RUNVM" >
+  <?=mk_option($current['RUNVM'], "y", _('Yes'))?>
+  <?=mk_option($current['RUNVM'], "n", _('No'))?>
+  </select>
+
+:WOL_run_VM_help:
+
+_(Enable Shutdown / Suspend actions)_:
+: <select name="RUNSHUT" >
+  <?=mk_option($current['RUNSHUT'], "n", _('No'))?>
+  <?=mk_option($current['RUNSHUT'], "y", _('Yes'))?>
+  </select>
+
+:WOL_run_shutdown_help:
+
+_(Suspend command)_:
+: <select name="RUNSUSPCMD" >
+  <?=mk_option($current['RUNSUSPCMD'], "suspend", _('Suspend'))?>
+  <?=mk_option($current['RUNSUSPCMD'], "dompmsuspend", _('Power Management Suspend'))?>
+  </select>
+
+:WOL_run_suspcmd_help:
+
+_(Suspend PM mode)_:
+: <select name="RUNSUSPMODE" >
+  <?=mk_option($current['RUNSUSPMODE'], "disk", _('Disk'))?>
+  <?=mk_option($current['RUNSUSPMODE'], "mem", _('Memory'))?>
+  </select>
+
+:WOL_run_suspmode_help:
+
+_(Interface(s) to listen on)_:
+: <?php
+  $sel = array();
+  if (isset($current['INTERFACE'])) {
+    foreach (explode(',', $current['INTERFACE']) as $s) $sel[] = trim($s);
+  }
+?>
+: <input type="hidden" id="INTERFACE" name="INTERFACE" value="<?=isset($current['INTERFACE']) ? htmlspecialchars($current['INTERFACE']) : 'eth0'?>">
+: <?php
+    foreach ($ports as $port) {
+      if (!locked('eth0',$port)) {
+        $isSel = in_array($port,$sel) ? 'checked' : '';
+        echo "<label style=\"display:block;margin-bottom:4px;\"><input type=\"checkbox\" class=\"WOL_interface_cb\" value=\"$port\" $isSel onchange=\"var values=[];var boxes=document.querySelectorAll('.WOL_interface_cb:checked');for(var i=0;i<boxes.length;i++){values.push(boxes[i].value);}document.getElementById('INTERFACE').value=values.join(',');\"> $port</label>\n";
+      }
+    }
+?>
+
+:WOL_interface_help:
+
+_(Interface promiscuous mode)_:
+: <select id="IFMODE" name="IFMODE" >
+  <?=mk_option($current['IFMODE'], "n", _('No'))?>
+  <?=mk_option($current['IFMODE'], "y", _('Yes'))?>
+  </select>
+
+:WOL_promiscuous_mode_help:
+
+_(Log file)_:
+: <input name="LOGFILE" class="narrow"type="text" value=<?=$current['LOGFILE']?>>
+
+
+:WOL_log_file_help:
+
+&nbsp;
+: <input type="submit"  value="_(Apply)_" disabled><input type="button" value="_(Done)_" onclick="done()">
+</form>
