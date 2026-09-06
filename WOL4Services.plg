@@ -12,6 +12,7 @@
 <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 <!ENTITY supportURL	"https://forums.unraid.net/topic/157327-plugin-wol-for-services/">
 <!ENTITY md5		"adea901de110cb183b6d520bd38837f9">
+<!ENTITY sha256 "d668d6478ba9f7179031f74f0442b4e9437f8ce836aea3be0ef1fd04e21668fa">
 ]>
 
 <PLUGIN
@@ -95,6 +96,7 @@ fi
  <!-- The 'source' file. -->
  <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.12" Run="upgradepkg --install-new">
   <URL>&pkgURL;/&plgNAME;.txz</URL>
+  <SHA256>&sha256;</SHA256>
  </FILE>
 
 <!--
